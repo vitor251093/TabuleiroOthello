@@ -36,13 +36,13 @@ class BoardController:
   def _end_game(self):
     score = self.board.score()
     if score[0] > score[1]:
-	  print ""
+      print ""
       print 'Jogador ' + Board.WHITE + ' Ganhou'
     elif score[0] < score[1]:
       print ""
-	  print 'Jogador ' + Board.BLACK + ' Ganhou'
+      print 'Jogador ' + Board.BLACK + ' Ganhou'
     else:
-	  print ""
+      print ""
       print 'Jogo terminou empatado'
 
   def _opponent(self, player):
