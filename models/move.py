@@ -1,4 +1,8 @@
-class Move:
+"""Posicao em um tabuleiro."""
+
+class Move(object):
+    """Objeto de uma posicao em um tabuleiro."""
+
     def __init__(self, x, y):
         self.x = x
         self.y = y
