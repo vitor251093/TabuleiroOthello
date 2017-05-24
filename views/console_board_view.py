@@ -3,7 +3,7 @@
 import Tkinter as Tkinter
 import tkMessageBox as Alert
 
-def realizar_proxima_jogada():
+def realizar_proxima_jogada(event=None):
     """Permitir que a proxima jogada seja executada."""
 
     if ConsoleBoardView.partida_iniciada == 0:
@@ -21,6 +21,7 @@ class ConsoleBoardView(object):
     TABULEIRO_X = 20
     TABULEIRO_Y = 20
     TABULEIRO_SIDE = 396
+    TABULEIRO_COLOR = '#CCC'
 
     TABULEIRO_CASA_NUM = 9
     TABULEIRO_CASA_SIDE = TABULEIRO_SIDE/TABULEIRO_CASA_NUM
@@ -43,10 +44,11 @@ class ConsoleBoardView(object):
                                     TABULEIRO_Y + TABULEIRO_CASA_SIDE*j,
                                     TABULEIRO_X + TABULEIRO_CASA_SIDE*(i+1),
                                     TABULEIRO_Y + TABULEIRO_CASA_SIDE*(j+1),
-                                    fill='#FFF', outline='#000', tag='tabuleiro')
+                                    fill=TABULEIRO_COLOR, outline='#000', tag='tabuleiro')
 
     action_button = Tkinter.Button(master, text="Avancar", command=realizar_proxima_jogada)
     action_button.grid(row=0, column=2)
+    master.bind('<Return>', realizar_proxima_jogada)
 
 
     def __init__(self, controller, board):
@@ -57,8 +59,12 @@ class ConsoleBoardView(object):
         """Coloca a view em loop principal quando o terminal para de ser usado."""
         ConsoleBoardView.master.mainloop()
 
-    def desenhar_disco(self, i, j, color):
-        """Desenha um disco na view do jogo."""
+    def anunciar_vitorioso(self, vencedor, perdedor, pontos_vencedor, pontos_perdedor):
+        """Anuncia caso alguem venca a partida."""
+        Alert.showinfo('Fim de jogo', vencedor + ' venceu a partida contra ' + perdedor +
+                       ' (' + str(pontos_vencedor) + ' - ' + str(pontos_perdedor) + ')!')
+
+    def _desenhar_disco(self, i, j, color):
         margem = ConsoleBoardView.TABULEIRO_DISCO_MARGEM
         pos_x0 = ConsoleBoardView.TABULEIRO_X + ConsoleBoardView.TABULEIRO_CASA_SIDE*(j-1) + margem
         pos_y0 = ConsoleBoardView.TABULEIRO_Y + ConsoleBoardView.TABULEIRO_CASA_SIDE*(i-1) + margem
@@ -79,6 +85,6 @@ class ConsoleBoardView(object):
 
         for i in range(1, ConsoleBoardView.TABULEIRO_CASA_NUM):
             for j in range(1, ConsoleBoardView.TABULEIRO_CASA_NUM):
-                self.desenhar_disco(i, j, self.board.get_square_color(i, j))
+                self._desenhar_disco(i, j, self.board.get_square_color(i, j))
 
         print self.board

@@ -28,6 +28,9 @@ class BoardController(object):
 
     def next_round(self):
         """Permite que a IA realize a jogada seguinte."""
+        if self.finish_game == 3:
+            return
+
         atual_color = self.atual_player.color
         print 'Jogador: ' + atual_color
         if self.board.valid_moves(atual_color).__len__() > 0:
@@ -45,14 +48,17 @@ class BoardController(object):
     def _end_game(self):
         score = self.board.score()
         if score[0] > score[1]:
-            print ""
-            print 'Jogador ' + self.white_player.__class__.__name__ + '('+Board.WHITE+') Ganhou'
+            self.view.anunciar_vitorioso(self.white_player.__class__.__name__,
+                                         self.black_player.__class__.__name__,
+                                         score[0], score[1])
         elif score[0] < score[1]:
-            print ""
-            print 'Jogador ' + self.black_player.__class__.__name__ + '('+Board.BLACK+') Ganhou'
+            self.view.anunciar_vitorioso(self.black_player.__class__.__name__,
+                                         self.white_player.__class__.__name__,
+                                         score[1], score[0])
         else:
             print ""
             print 'Jogo terminou empatado'
+        self.finish_game = 3
 
     def _opponent(self, player):
         if player.color == Board.WHITE:
