@@ -57,9 +57,7 @@ class Board(object):
         return ret
 
     def __str__(self):
-        ret = 'Score(White, Black): ' + self.score().__str__()
-        ret += '\n    '
-        return ret
+        return 'White (' + str(self.score()[0]) + ') X (' + str(self.score()[1]) + ') Black'
 
     def score(self):
         """Retorna o score de ambos os jogadores."""
