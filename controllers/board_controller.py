@@ -24,13 +24,7 @@ class BoardController(object):
         self.atual_player = self.black_player
 
         self.view.atualizar_discos()
-
-        while self.finish_game != 2:
-            raw_input("")
-            if self.finish_game != 2:
-                self.next_round()
-
-        self._end_game()
+        self.view.put_view_in_main_loop()
 
     def next_round(self):
         """Permite que a IA realize a jogada seguinte."""

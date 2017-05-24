@@ -1,11 +1,15 @@
 """View do jogo de Othelo."""
 
 import Tkinter as Tkinter
+import tkMessageBox as Alert
 
 def realizar_proxima_jogada():
     """Permitir que a proxima jogada seja executada."""
 
-    ConsoleBoardView.controller.next_round()
+    if ConsoleBoardView.partida_iniciada == 0:
+        Alert.showerror('Erro', 'Nao e possivel avancar uma jogada antes de iniciar a partida.')
+    else:
+        ConsoleBoardView.controller.next_round()
 
 class ConsoleBoardView(object):
     """Objeto de view do jogo de Othelo."""
@@ -21,6 +25,8 @@ class ConsoleBoardView(object):
     TABULEIRO_CASA_NUM = 9
     TABULEIRO_CASA_SIDE = TABULEIRO_SIDE/TABULEIRO_CASA_NUM
     TABULEIRO_DISCO_MARGEM = 10
+
+    partida_iniciada = 0
 
     master = Tkinter.Tk()
     master.title(WINDOW_NAME)
@@ -47,6 +53,10 @@ class ConsoleBoardView(object):
         ConsoleBoardView.controller = controller
         self.board = board
 
+    def put_view_in_main_loop(self):
+        """Coloca a view em loop principal quando o terminal para de ser usado."""
+        ConsoleBoardView.master.mainloop()
+
     def desenhar_disco(self, i, j, color):
         """Desenha um disco na view do jogo."""
         margem = ConsoleBoardView.TABULEIRO_DISCO_MARGEM
@@ -64,7 +74,7 @@ class ConsoleBoardView(object):
 
     def atualizar_discos(self):
         """Atualiza a view do jogo."""
-
+        ConsoleBoardView.partida_iniciada = 1
         ConsoleBoardView.canvas.delete('discos')
 
         for i in range(1, ConsoleBoardView.TABULEIRO_CASA_NUM):
@@ -72,4 +82,3 @@ class ConsoleBoardView(object):
                 self.desenhar_disco(i, j, self.board.get_square_color(i, j))
 
         print self.board
-

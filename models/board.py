@@ -59,14 +59,6 @@ class Board(object):
     def __str__(self):
         ret = 'Score(White, Black): ' + self.score().__str__()
         ret += '\n    '
-        for i in range(1, 9):
-            ret += i.__str__() + ' '
-        ret += '\n'
-        for i in range(1, 9):
-            ret += i.__str__() + ' '
-            for j in range(1, 9):
-                ret += self.board[i][j] + ' '
-            ret += '\n'
         return ret
 
     def score(self):
