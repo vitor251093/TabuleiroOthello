@@ -7,13 +7,15 @@ from models.board import Board
 
 class BoardController(object):
     """Objeto do controlador de jogo de Othelo."""
+
     def __init__(self):
         self.board = Board(None)
-        self.view = ConsoleBoardView(self.board)
+        self.view = ConsoleBoardView(self, self.board)
 
         self.white_player = None
         self.black_player = None
         self.atual_player = None
+        self.finish_game = 0
 
     def init_game(self):
         """Inicia a partida de Othelo em seu tabuleiro (board)."""
@@ -21,25 +23,30 @@ class BoardController(object):
         self.black_player = self._select_player(Board.BLACK)
         self.atual_player = self.black_player
 
-        finish_game = 0
+        self.view.atualizar_discos()
 
-        self.view.update_view()
-
-        while finish_game != 2:
+        while self.finish_game != 2:
             raw_input("")
-            atual_color = self.atual_player.color
-            print 'Jogador: ' + atual_color
-            if self.board.valid_moves(atual_color).__len__() > 0:
-                self.board.play(self.atual_player.play(self.board.get_clone()), atual_color)
-                self.view.update_view()
-                finish_game = 0
-            else:
-                print 'Sem movimentos para o jogador: ' + atual_color
-                finish_game += 1
-            self.atual_player = self._opponent(self.atual_player)
+            if self.finish_game != 2:
+                self.next_round()
 
         self._end_game()
 
+    def next_round(self):
+        """Permite que a IA realize a jogada seguinte."""
+        atual_color = self.atual_player.color
+        print 'Jogador: ' + atual_color
+        if self.board.valid_moves(atual_color).__len__() > 0:
+            self.board.play(self.atual_player.play(self.board.get_clone()), atual_color)
+            self.view.atualizar_discos()
+            self.finish_game = 0
+        else:
+            print 'Sem movimentos para o jogador: ' + atual_color
+            self.finish_game += 1
+        self.atual_player = self._opponent(self.atual_player)
+
+        if self.finish_game == 2:
+            self._end_game()
 
     def _end_game(self):
         score = self.board.score()
