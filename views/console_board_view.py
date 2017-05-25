@@ -1,6 +1,5 @@
 """View do jogo de Othelo."""
 
-import glob
 import Tkinter as Tkinter
 import tkMessageBox as Alert
 import ttk as Ttk
@@ -76,11 +75,6 @@ class ConsoleBoardView(object):
         self.white_box = Ttk.Combobox(self.master, textvariable=self.white_box_value)
         self.white_box.grid(row=3, column=8, columnspan=2)
 
-        # Botao de Iniciar
-        self.action_button = Tkinter.Button(self.master, text="Iniciar Partida",
-                                            command=self.iniciar_partida)
-        self.action_button.grid(row=4, column=7, columnspan=3)
-
         # Label de estado atual da partida
         self.status_label = Tkinter.Label(self.master, text="",
                                           font=("Helvetica", 14))
@@ -98,18 +92,17 @@ class ConsoleBoardView(object):
         self.master.bind('<Return>', self.realizar_proxima_jogada)
 
     def reiniciar_jogo(self, board):
+        """Permite reiniciar o tabuleiro depois do fim de uma partida."""
         self.board = board
         self.partida_iniciada = 0
         self.status_label['text'] = ''
         self.player_label['text'] = ''
         self.canvas.delete('discos')
 
-    def iniciar_partida(self, event=None):
-        """Permitir que a partida tenha inicio executada."""
+    def realizar_proxima_jogada(self, event=None):
+        """Permitir que a proxima jogada seja executada."""
 
-        if self.partida_iniciada == 1:
-            Alert.showerror('Erro', 'A partida ja foi iniciada.')
-        else:
+        if self.partida_iniciada == 0:
             white_box_value = self.jogadores[int(self.white_box.current())]
             black_box_value = self.jogadores[int(self.black_box.current())]
 
@@ -120,12 +113,6 @@ class ConsoleBoardView(object):
             self.partida_iniciada = 1
             self.atualizar_discos()
             self.atualizar_jogador_atual(self.controller.atual_player.color)
-
-    def realizar_proxima_jogada(self, event=None):
-        """Permitir que a proxima jogada seja executada."""
-
-        if self.partida_iniciada == 0:
-            Alert.showerror('Erro', 'Nao e possivel avancar uma jogada antes de iniciar a partida.')
         else:
             self.controller.next_round()
 
@@ -146,9 +133,11 @@ class ConsoleBoardView(object):
         self.master.mainloop()
 
     def atualizar_estado(self, estado):
+        """Atualiza a label de estado com o valor fornecido."""
         self.status_label['text'] = estado
 
     def atualizar_jogador_atual(self, jogador):
+        """Informa ao jogador por meio de uma label qual sera o proximo jogador."""
         if jogador == '@':
             self.player_label['text'] = 'Proxima jogada: Black'
         if jogador == 'o':

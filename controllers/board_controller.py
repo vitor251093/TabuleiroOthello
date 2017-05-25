@@ -22,16 +22,20 @@ class BoardController(object):
         self.view.carregar_jogadores_possiveis(self._possible_players_list())
         self.view.put_view_in_main_loop()
 
+    def restart_game(self):
+        """Reinicia o jogo Othelo."""
+        self.board = Board(None)
+        self.view.reiniciar_jogo(self.board)
+
+        self.white_player = None
+        self.black_player = None
+        self.atual_player = None
+        self.finish_game = 0
+
     def next_round(self):
         """Permite que a IA realize a jogada seguinte."""
         if self.finish_game == 3:
-            self.board = Board(None)
-            self.view.reiniciar_jogo(self.board)
-
-            self.white_player = None
-            self.black_player = None
-            self.atual_player = None
-            self.finish_game = 0
+            self.restart_game()
             return
 
         atual_color = self.atual_player.color
@@ -67,7 +71,7 @@ class BoardController(object):
             self.view.anunciar_vitorioso(self.black_player.__class__.__name__,
                                          self.white_player.__class__.__name__,
                                          score[1], score[0])
-        
+
         self.finish_game = 3
 
     def _opponent(self, player):
