@@ -13,7 +13,7 @@ WINDOW_HEIGHT = 400
 
 TABULEIRO_X = 20
 TABULEIRO_Y = 20
-TABULEIRO_SIDE = 396
+TABULEIRO_SIDE = 396.0
 TABULEIRO_COLOR = '#CCC'
 TABULEIRO_DISCO_MARGEM = 10
 
@@ -145,6 +145,9 @@ class ConsoleBoardView(object):
 
     def anunciar_vitorioso(self, vencedor, perdedor, pontos_vencedor, pontos_perdedor):
         """Anuncia caso alguem venca a partida."""
+        self.status_label['text'] = (vencedor + ' venceu!')
+        self.player_label['text'] = 'Fim de jogo'
+
         Alert.showinfo('Fim de jogo', vencedor + ' venceu a partida contra ' + perdedor +
                        ' (' + str(pontos_vencedor) + ' - ' + str(pontos_perdedor) + ')!')
 
