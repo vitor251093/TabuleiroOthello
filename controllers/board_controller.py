@@ -10,7 +10,9 @@ class BoardController(object):
 
     def __init__(self):
         self.board = Board(None)
+
         self.view = ConsoleBoardView(self, self.board)
+        self.view.carregar_jogadores_possiveis(self._possible_players_list())
 
         self.white_player = None
         self.black_player = None
@@ -45,6 +47,9 @@ class BoardController(object):
         if self.finish_game == 2:
             self._end_game()
 
+    def _possible_players_list(self):
+        return glob.glob('./models/players/*_player.py')
+
     def _end_game(self):
         score = self.board.score()
         if score[0] > score[1]:
@@ -67,7 +72,7 @@ class BoardController(object):
         return self.white_player
 
     def _select_player(self, color):
-        players = glob.glob('./models/players/*_player.py')
+        players = self._possible_players_list()
         print 'Selecione um dos players abaixo para ser o jogador '+color
 
         for idx, player in enumerate(players):
