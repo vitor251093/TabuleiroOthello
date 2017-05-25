@@ -55,7 +55,7 @@ class ConsoleBoardView(object):
 
         # Label de "Escolha os jogadores"
         self.escolha_label = Tkinter.Label(self.master, text="Escolha os jogadores",
-                                         font=("Helvetica", 16))
+                                           font=("Helvetica", 16))
         self.escolha_label.grid(row=1, column=7, columnspan=4)
 
         # Label "Black Player:"
@@ -82,7 +82,7 @@ class ConsoleBoardView(object):
         self.action_button.grid(row=4, column=7, columnspan=3)
 
         # Label de estado atual da partida
-        self.status_label = Tkinter.Label(self.master, text="Aguardando...",
+        self.status_label = Tkinter.Label(self.master, text="",
                                           font=("Helvetica", 14))
         self.status_label.grid(row=8, column=7, columnspan=4)
 
@@ -96,6 +96,13 @@ class ConsoleBoardView(object):
                                             command=self.realizar_proxima_jogada)
         self.action_button.grid(row=12, column=7, columnspan=3)
         self.master.bind('<Return>', self.realizar_proxima_jogada)
+
+    def reiniciar_jogo(self, board):
+        self.board = board
+        self.partida_iniciada = 0
+        self.status_label['text'] = ''
+        self.player_label['text'] = ''
+        self.canvas.delete('discos')
 
     def iniciar_partida(self, event=None):
         """Permitir que a partida tenha inicio executada."""
