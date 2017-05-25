@@ -36,7 +36,7 @@ class ConsoleBoardView(object):
 
     canvas = Tkinter.Canvas(master, width=TABULEIRO_SIDE + TABULEIRO_X*2,
                             height=TABULEIRO_SIDE + TABULEIRO_Y*2)
-    canvas.grid(row=0, column=0, columnspan=2)
+    canvas.grid(row=0, rowspan=3, column=0, columnspan=2)
 
     for i in range(0, TABULEIRO_CASA_NUM-1):
         for j in range(0, TABULEIRO_CASA_NUM-1):
@@ -47,7 +47,7 @@ class ConsoleBoardView(object):
                                     fill=TABULEIRO_COLOR, outline='#000', tag='tabuleiro')
 
     action_button = Tkinter.Button(master, text="Avancar", command=realizar_proxima_jogada)
-    action_button.grid(row=0, column=2)
+    action_button.grid(row=2, column=2)
     master.bind('<Return>', realizar_proxima_jogada)
 
 
