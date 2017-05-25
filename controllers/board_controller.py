@@ -12,7 +12,6 @@ class BoardController(object):
         self.board = Board(None)
 
         self.view = ConsoleBoardView(self, self.board)
-        self.view.carregar_jogadores_possiveis(self._possible_players_list())
 
         self.white_player = None
         self.black_player = None
@@ -20,12 +19,8 @@ class BoardController(object):
         self.finish_game = 0
 
     def init_game(self):
-        """Inicia a partida de Othelo em seu tabuleiro (board)."""
-        self.white_player = self._select_player(Board.WHITE)
-        self.black_player = self._select_player(Board.BLACK)
-        self.atual_player = self.black_player
-
-        self.view.atualizar_discos()
+        """Inicio o jogo Othelo."""
+        self.view.carregar_jogadores_possiveis(self._possible_players_list())
         self.view.put_view_in_main_loop()
 
     def next_round(self):
@@ -34,21 +29,27 @@ class BoardController(object):
             return
 
         atual_color = self.atual_player.color
-        print 'Jogador: ' + atual_color
         if self.board.valid_moves(atual_color).__len__() > 0:
             self.board.play(self.atual_player.play(self.board.get_clone()), atual_color)
             self.view.atualizar_discos()
             self.finish_game = 0
         else:
-            print 'Sem movimentos para o jogador: ' + atual_color
             self.finish_game += 1
         self.atual_player = self._opponent(self.atual_player)
+
+        self.view.atualizar_jogador_atual(self.atual_player.color)
 
         if self.finish_game == 2:
             self._end_game()
 
     def _possible_players_list(self):
         return glob.glob('./models/players/*_player.py')
+
+    def select_player(self, player, color):
+        """Carrega o arquivo de um jogador para certa cor e retorna seu modulo."""
+        module_globals = {}
+        execfile(player, module_globals)
+        return module_globals[module_globals.keys()[len(module_globals.keys()) - 1]](color)
 
     def _end_game(self):
         score = self.board.score()
@@ -70,16 +71,3 @@ class BoardController(object):
             return self.black_player
 
         return self.white_player
-
-    def _select_player(self, color):
-        players = self._possible_players_list()
-        print 'Selecione um dos players abaixo para ser o jogador '+color
-
-        for idx, player in enumerate(players):
-            print idx.__str__() + " - " + player
-
-        player = raw_input("Digite o numero do player que voce deseja: ")
-        module_globals = {}
-        execfile(players[int(player)], module_globals)
-        print module_globals.keys()
-        return module_globals[module_globals.keys()[len(module_globals.keys()) - 1]](color)
